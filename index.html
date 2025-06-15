@@ -164,6 +164,11 @@
             margin-top: 1rem;
         }
 
+        .progress-actions {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 0.5rem;
@@ -362,7 +367,7 @@
             </div>
         </div>
 
-        <!-- Contacto directo -->
+        <-- Contacto directo -->
         <div class="section" style="text-align: center; background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
             <h2>💬 ¿Necesitas ayuda?</h2>
             <p style="margin: 1rem 0;">Si tienes dudas o necesitas asistencia para crear tu catálogo web, contáctanos directamente</p>
@@ -370,6 +375,82 @@
                class="btn-whatsapp" target="_blank">
                 📱 Contactar por WhatsApp
             </a>
+        </div>
+
+        <!-- Sistema de gestión de progreso -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                class CatalogProgressManager {
+                    constructor() {
+                        this.storageKey = 'catalog_progress';
+                    }
+
+                    async saveProgress(catalogData) {
+                        const progressData = {
+                            timestamp: new Date().toISOString(),
+                            catalog: catalogData
+                        };
+                        localStorage.setItem(this.storageKey, JSON.stringify(progressData));
+                    }
+
+                    loadProgress() {
+                        const savedData = localStorage.getItem(this.storageKey);
+                        console.log('Datos recuperados de localStorage:', savedData); // Depuración
+                        return savedData ? JSON.parse(savedData) : null;
+                    }
+
+                    clearProgress() {
+                        localStorage.removeItem(this.storageKey);
+                    }
+                }
+
+                const catalogProgressManager = new CatalogProgressManager();
+
+                document.getElementById('saveProgressBtn').addEventListener('click', () => {
+                    const catalogData = { products, businessData }; // Guardar productos y datos del negocio
+                    catalogProgressManager.saveProgress(catalogData);
+                    alert('Progreso guardado exitosamente');
+                });
+
+                document.getElementById('loadProgressBtn').addEventListener('click', () => {
+                    const progress = catalogProgressManager.loadProgress();
+                    if (progress) {
+                        console.log('Progreso cargado:', progress); // Depuración
+
+                        // Restaurar datos del negocio
+                        const { businessData: loadedBusinessData, products: loadedProducts } = progress.catalog;
+                        if (loadedBusinessData) {
+                            document.getElementById('businessName').value = loadedBusinessData.name || '';
+                            document.getElementById('businessPhone').value = loadedBusinessData.phone || '';
+                            document.getElementById('businessAddress').value = loadedBusinessData.address || '';
+                            document.getElementById('businessHours').value = loadedBusinessData.hours || '';
+                            document.getElementById('businessDescription').value = loadedBusinessData.description || '';
+                        }
+
+                        // Restaurar productos
+                        if (loadedProducts && Array.isArray(loadedProducts)) {
+                            products = loadedProducts;
+                            updateProductList();
+                        }
+
+                        alert('Progreso cargado exitosamente');
+                    } else {
+                        alert('No hay progreso guardado');
+                    }
+                });
+
+                document.getElementById('clearProgressBtn').addEventListener('click', () => {
+                    catalogProgressManager.clearProgress();
+                    alert('Progreso eliminado');
+                });
+            });
+        </script>
+
+        <!-- Botones para gestionar el progreso -->
+        <div class="progress-actions">
+            <button id="saveProgressBtn" class="btn">💾 Guardar Progreso</button>
+            <button id="loadProgressBtn" class="btn">📂 Cargar Progreso</button>
+            <button id="clearProgressBtn" class="btn">🗑️ Limpiar Progreso</button>
         </div>
     </div>
 
