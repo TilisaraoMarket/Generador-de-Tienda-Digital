@@ -169,6 +169,40 @@
             margin: 2rem 0;
         }
 
+        .thumbnail {
+            width: 150px; /* Tamaño pequeño */
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 0.5rem;
@@ -296,6 +330,12 @@
         <div id="previewSection" style="display:none;" class="section">
             <h2>👀 Vista previa de tu catálogo web</h2>
             <div id="storePreview"></div>
+        </div>
+
+        <!-- Modal para agrandar imágenes -->
+        <div id="imageModal" class="modal">
+            <span class="close" onclick="closeImageModal()">&times;</span>
+            <img class="modal-content" id="modalImage">
         </div>
 
         <!-- Planes de creación web -->
@@ -501,13 +541,13 @@
 
             container.innerHTML = products.map(product => `
                 <div class="product-card">
-                    <img src="${product.image}" alt="${product.name}">
+                    <img src="${product.image}" alt="${product.name}" class="thumbnail" onclick="showImageModal(this)">
                     <h4>${product.name}</h4>
                     <p class="price" style="color:#25d366;font-weight:bold;font-size:1.2rem;">${product.price}</p>
                     <p style="color:#666;font-size:0.9rem;">${product.description}</p>
                     <p style="background:#f0f0f0;padding:0.25rem 0.5rem;border-radius:12px;font-size:0.8rem;display:inline-block;margin:0.5rem 0;">${product.category}</p>
                     <br>
-                    <button onclick="removeProduct(${product.id})" class="btn-danger" style="font-size:0.8rem;padding:0.5rem;">����️ Eliminar</button>
+                    <button onclick="removeProduct(${product.id})" class="btn-danger" style="font-size:0.8rem;padding:0.5rem;">🗑️ Eliminar</button>
                 </div>
             `).join('');
         }
@@ -694,6 +734,18 @@
             `;
             
             document.body.appendChild(modal);
+        }
+
+        function showImageModal(image) {
+            const modal = document.getElementById("imageModal");
+            const modalImage = document.getElementById("modalImage");
+            modal.style.display = "block";
+            modalImage.src = image.src; // Usa la misma imagen
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none";
         }
     </script>
 </body>
